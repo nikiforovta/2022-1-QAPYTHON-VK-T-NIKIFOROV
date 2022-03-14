@@ -1,4 +1,6 @@
 import pytest
+from selenium.common.exceptions import ElementClickInterceptedException, StaleElementReferenceException, \
+    TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -46,8 +48,15 @@ class BaseCase:
     def wait_clickable(self, locator):
         return WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable(locator))
 
+    LOGOUT_RETRY = 5
+
     def logout(self):
-        self.find(locators.PROFILE_LOCATOR).click()
-        self.wait_visible(locators.DROPDOWN_PROFILE_LOCATOR)
-        logout_menu = self.wait_clickable(locators.LOGOUT_LOCATOR)
-        logout_menu.click()
+        for i in range(self.LOGOUT_RETRY):
+            try:
+                self.wait_clickable(locators.PROFILE_LOCATOR).click()
+                self.wait_visible(locators.DROPDOWN_PROFILE_LOCATOR)
+                self.wait_clickable(locators.LOGOUT_LOCATOR).click()
+                return
+            except ElementClickInterceptedException or StaleElementReferenceException or TimeoutException:
+                if i == self.LOGOUT_RETRY - 1:
+                    raise

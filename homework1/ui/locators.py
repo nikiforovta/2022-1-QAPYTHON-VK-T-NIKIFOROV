@@ -1,8 +1,8 @@
 from selenium.webdriver.common.by import By
 
 LOGIN_BUTTON_LOCATOR = (
-    By.CSS_SELECTOR,
-    '.responseHead-module-button-2yl51i'
+    By.XPATH,
+    '//*[starts-with(@class, "responseHead-module-button")]'
 )
 
 EMAIL_INPUT_LOCATOR = (
@@ -16,18 +16,18 @@ PASSWORD_INPUT_LOCATOR = (
 )
 
 LOGIN_LOCATOR = (
-    By.CSS_SELECTOR,
-    ".authForm-module-button-1u2DYF"
+    By.XPATH,
+    "//*[starts-with(@class, 'authForm-module-button')]"
 )
 
 MENU_LOCATOR = {
     'segments': (
-        By.CSS_SELECTOR,
-        'li.center-module-buttonWrap-1dlSMH:nth-child(2)'
+        By.XPATH,
+        "//a[contains(@class, 'center-module-segments')]"
     ),
     'billing': (
-        By.CSS_SELECTOR,
-        'li.center-module-buttonWrap-1dlSMH:nth-child(3)'
+        By.XPATH,
+        "//a[contains(@class, 'center-module-billing')]"
     )
 }
 
@@ -37,8 +37,8 @@ CREATE_LOCATOR = (
 )
 
 COMMON_LOCATOR = (
-    By.CSS_SELECTOR,
-    "div.left-nav__group:nth-child(3) > span"
+    By.XPATH,
+    "//div[3]/span"
 )
 
 PAYER_LOCATOR = (
@@ -47,13 +47,13 @@ PAYER_LOCATOR = (
 )
 
 AUTODEPOSIT_LOCATOR = (
-    By.CSS_SELECTOR,
-    "li.page-tabs__tab-item:nth-child(2) > span"
+    By.XPATH,
+    "//li[@data-type='autodeposit']/span"
 )
 
 PROFILE_LOCATOR = (
-    By.CSS_SELECTOR,
-    ".right-module-rightWrap-blvNjE"
+    By.XPATH,
+    "//*[starts-with(@class, 'right-module-rightWrap')]"
 )
 
 CAMPAIGN_LOCATOR = (
@@ -62,8 +62,8 @@ CAMPAIGN_LOCATOR = (
 )
 
 CHANGE_NAME_LOCATOR = (
-    By.CSS_SELECTOR,
-    ".js-contacts-field-name > div > div > input"
+    By.XPATH,
+    "//div[@data-name='fio']/div/input"
 )
 
 SAVE_CHANGES = (
@@ -72,28 +72,28 @@ SAVE_CHANGES = (
 )
 
 SUCCESS_LOCATOR = (
-    By.CSS_SELECTOR,
-    "div._notification:nth-child(1) > div"
-)
-
-LOGOUT_LOCATOR = (
-    By.CSS_SELECTOR,
-    'li.rightMenu-module-rightMenuItem-1TjQzn:nth-child(2)'
+    By.XPATH,
+    "//div[contains(@data-class-name,'SuccessView')]/div[starts-with(@class, '_notification__content')]"
 )
 
 DROPDOWN_PROFILE_LOCATOR = (
-    By.CSS_SELECTOR,
-    ".rightMenu-module-rightMenu-3VDfNR"
+    By.XPATH,
+    "//ul[starts-with(@class, 'rightMenu-module-rightMenu')]"
+)
+
+LOGOUT_LOCATOR = (
+    By.XPATH,
+    "//ul[starts-with(@class, 'rightMenu-module-rightMenu')]/li[2]"
 )
 
 PROMOTE_LOCATOR = (
-    By.CSS_SELECTOR,
-    ".mainPage-module-bigTitle-3xPGEg"
+    By.XPATH,
+    "//*[starts-with(@class, 'mainPage-module-bigTitle')]"
 )
 
 START_PROMOTION_LOCATOR = (
-    By.CSS_SELECTOR,
-    ".mainPage-module-description-1k7oV8 > div:nth-child(3)"
+    By.XPATH,
+    "//*[starts-with(@class, 'mainPage-module-description')]/div[2]"
 )
 
 
