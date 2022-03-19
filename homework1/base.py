@@ -1,6 +1,6 @@
+import time
+
 import pytest
-from selenium.common.exceptions import ElementClickInterceptedException, StaleElementReferenceException, \
-    TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -10,20 +10,24 @@ from ui import links, locators
 class BaseCase:
     EMAIL = 'timofey.nikiforov@gmail.com'
     PASSWORD = 'TaeixfnpL76YRkh'
+    LOGOUT_RETRY = 5
 
     driver = None
+
+    def login(self):
+        login_button = self.find(locators.LOGIN_BUTTON_LOCATOR)
+        login_button.click()
+        login_form = self.find(locators.CREDENTIALS_INPUT_LOCATOR('email'))
+        login_form.send_keys(self.EMAIL)
+        password_form = self.find(locators.CREDENTIALS_INPUT_LOCATOR('password'))
+        password_form.send_keys(self.PASSWORD)
+        login_button = self.find(locators.LOGIN_LOCATOR)
+        login_button.click()
 
     @pytest.fixture(scope='function', autouse=True)
     def setup(self, open_my_target):
         self.driver = open_my_target
-        login_button = self.find(locators.LOGIN_BUTTON_LOCATOR)
-        login_button.click()
-        login_form = self.find(locators.EMAIL_INPUT_LOCATOR)
-        login_form.send_keys(self.EMAIL)
-        password_form = self.find(locators.PASSWORD_INPUT_LOCATOR)
-        password_form.send_keys(self.PASSWORD)
-        login_button = self.find(locators.LOGIN_LOCATOR)
-        login_button.click()
+        self.login()
 
     def find(self, locator):
         return self.driver.find_element(*locator)
@@ -31,7 +35,9 @@ class BaseCase:
     def open_profile(self):
         self.driver.get(links.PROFILE_LINK)
 
+    @pytest.fixture
     def teardown_profile(self):
+        yield
         self.change_name(self.EMAIL)
         self.driver.refresh()
 
@@ -48,8 +54,6 @@ class BaseCase:
     def wait_clickable(self, locator):
         return WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable(locator))
 
-    LOGOUT_RETRY = 5
-
     def logout(self):
         for i in range(self.LOGOUT_RETRY):
             try:
@@ -57,6 +61,8 @@ class BaseCase:
                 self.wait_visible(locators.DROPDOWN_PROFILE_LOCATOR)
                 self.wait_clickable(locators.LOGOUT_LOCATOR).click()
                 return
-            except ElementClickInterceptedException or StaleElementReferenceException or TimeoutException:
+            except:
                 if i == self.LOGOUT_RETRY - 1:
                     raise
+                else:
+                    time.sleep(1)

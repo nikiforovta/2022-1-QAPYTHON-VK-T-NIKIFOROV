@@ -2,43 +2,27 @@ from selenium.webdriver.common.by import By
 
 LOGIN_BUTTON_LOCATOR = (
     By.XPATH,
-    '//*[starts-with(@class, "responseHead-module-button")]'
+    '//div[starts-with(@class, "responseHead-module-button")]'
 )
 
-EMAIL_INPUT_LOCATOR = (
+CREDENTIALS_INPUT_LOCATOR = lambda field: (
     By.CSS_SELECTOR,
-    'input[name="email"]'
-)
-
-PASSWORD_INPUT_LOCATOR = (
-    By.CSS_SELECTOR,
-    'input[name="password"]'
+    f'input[name="{field}"]'
 )
 
 LOGIN_LOCATOR = (
     By.XPATH,
-    "//*[starts-with(@class, 'authForm-module-button')]"
+    "//div[starts-with(@class, 'authForm-module-button')]"
 )
 
-MENU_LOCATOR = {
-    'segments': (
-        By.XPATH,
-        "//a[contains(@class, 'center-module-segments')]"
-    ),
-    'billing': (
-        By.XPATH,
-        "//a[contains(@class, 'center-module-billing')]"
-    )
-}
+MENU_LOCATOR = lambda menu: (
+    By.XPATH,
+    f"//a[contains(@class, 'center-module-{menu}')]"
+)
 
 CREATE_LOCATOR = (
     By.PARTIAL_LINK_TEXT,
     'Создайте'
-)
-
-COMMON_LOCATOR = (
-    By.XPATH,
-    "//div[3]/span"
 )
 
 PAYER_LOCATOR = (
@@ -46,19 +30,9 @@ PAYER_LOCATOR = (
     "div.deposit__payment-form__subtitle"
 )
 
-AUTODEPOSIT_LOCATOR = (
-    By.XPATH,
-    "//li[@data-type='autodeposit']/span"
-)
-
 PROFILE_LOCATOR = (
     By.XPATH,
-    "//*[starts-with(@class, 'right-module-rightWrap')]"
-)
-
-CAMPAIGN_LOCATOR = (
-    By.PARTIAL_LINK_TEXT,
-    'Создайте рекламную кампанию'
+    "//div[starts-with(@class, 'right-module-rightWrap')]"
 )
 
 CHANGE_NAME_LOCATOR = (
@@ -71,11 +45,6 @@ SAVE_CHANGES = (
     ".button"
 )
 
-SUCCESS_LOCATOR = (
-    By.XPATH,
-    "//div[contains(@data-class-name,'SuccessView')]/div[starts-with(@class, '_notification__content')]"
-)
-
 DROPDOWN_PROFILE_LOCATOR = (
     By.XPATH,
     "//ul[starts-with(@class, 'rightMenu-module-rightMenu')]"
@@ -83,22 +52,15 @@ DROPDOWN_PROFILE_LOCATOR = (
 
 LOGOUT_LOCATOR = (
     By.XPATH,
-    "//ul[starts-with(@class, 'rightMenu-module-rightMenu')]/li[2]"
-)
-
-PROMOTE_LOCATOR = (
-    By.XPATH,
-    "//*[starts-with(@class, 'mainPage-module-bigTitle')]"
+    "//a[@href='/logout']"
 )
 
 START_PROMOTION_LOCATOR = (
     By.XPATH,
-    "//*[starts-with(@class, 'mainPage-module-description')]/div[2]"
+    "//div[starts-with(@class, 'mainPage-module-description')]/div[2]"
 )
 
-
-def username_locator(name):
-    return (
-        By.CSS_SELECTOR,
-        f'div[title="{name}"]'
-    )
+USERNAME_LOCATOR = lambda name: (
+    By.CSS_SELECTOR,
+    f'div[title="{name}"]'
+)
