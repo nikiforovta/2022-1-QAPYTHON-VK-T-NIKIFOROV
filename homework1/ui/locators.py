@@ -21,8 +21,8 @@ MENU_LOCATOR = lambda menu: (
 )
 
 CREATE_LOCATOR = (
-    By.PARTIAL_LINK_TEXT,
-    'Создайте'
+    By.XPATH,
+    '//button[contains(@class, "submit")]'
 )
 
 PAYER_LOCATOR = (

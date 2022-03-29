@@ -9,26 +9,25 @@ from ui import locators
 class TestTarget(BaseCase):
     @pytest.mark.UI
     def test_login(self):
-        assert self.find(locators.USERNAME_LOCATOR(self.EMAIL)).get_attribute("title") == self.EMAIL
+        assert self.check_name()
 
     @pytest.mark.UI
-    @pytest.mark.parametrize("menu, assertions",
+    @pytest.mark.parametrize("menu, assertion",
                              [("segments",
-                               (locators.CREATE_LOCATOR, "Создайте")),
+                               locators.CREATE_LOCATOR),
                               ("billing",
-                               (locators.PAYER_LOCATOR, BaseCase.EMAIL))])
-    def test_menu(self, menu, assertions):
+                               locators.PAYER_LOCATOR)])
+    def test_menu(self, menu, assertion):
         self.find(locators.MENU_LOCATOR(menu)).click()
-        assert self.find(assertions[0]).text == assertions[1]
+        assert self.find(assertion).is_displayed()
 
     @pytest.mark.UI
-    @pytest.mark.usefixtures("teardown_profile")
     def test_change_profile(self):
         self.open_profile()
         name = str(uuid.uuid4())
         self.change_name(name)
         self.driver.refresh()
-        assert self.find(locators.USERNAME_LOCATOR(name)).get_attribute("title") == name
+        assert self.check_name()
 
     @pytest.mark.UI
     def test_logout(self):

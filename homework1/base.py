@@ -10,6 +10,7 @@ from ui import links, locators
 class BaseCase:
     EMAIL = 'timofey.nikiforov@gmail.com'
     PASSWORD = 'TaeixfnpL76YRkh'
+    username = EMAIL
     LOGOUT_RETRY = 5
 
     driver = None
@@ -28,6 +29,9 @@ class BaseCase:
     def setup(self, open_my_target):
         self.driver = open_my_target
         self.login()
+        yield
+        if self.driver.current_url == links.PROFILE_LINK:
+            self.change_name(self.EMAIL)
 
     def find(self, locator):
         return self.driver.find_element(*locator)
@@ -35,18 +39,13 @@ class BaseCase:
     def open_profile(self):
         self.driver.get(links.PROFILE_LINK)
 
-    @pytest.fixture
-    def teardown_profile(self):
-        yield
-        self.change_name(self.EMAIL)
-        self.driver.refresh()
-
     def change_name(self, name):
         name_input = self.find(locators.CHANGE_NAME_LOCATOR)
         name_input.click()
         name_input.clear()
         name_input.send_keys(name)
         self.find(locators.SAVE_CHANGES).click()
+        self.username = name
 
     def wait_visible(self, locator):
         return WebDriverWait(self.driver, 10).until(EC.visibility_of_element_located(locator))
@@ -66,3 +65,6 @@ class BaseCase:
                     raise
                 else:
                     time.sleep(1)
+
+    def check_name(self):
+        return self.find(locators.USERNAME_LOCATOR(self.username)).get_attribute("title") == self.username
