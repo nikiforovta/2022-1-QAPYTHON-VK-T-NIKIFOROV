@@ -9,7 +9,7 @@ from ui import locators
 class TestTarget(BaseCase):
     @pytest.mark.UI
     def test_login(self):
-        assert self.check_name()
+        assert self.find(locators.PROFILE_LOCATOR).is_displayed()
 
     @pytest.mark.UI
     @pytest.mark.parametrize("menu, assertion",
