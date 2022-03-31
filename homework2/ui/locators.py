@@ -29,6 +29,11 @@ class LoginPageLocators:
 
 
 class MainPageLocators:
+    PROFILE_LOCATOR = (
+        By.XPATH,
+        "//div[starts-with(@class, 'right-module-rightWrap')]"
+    )
+
     MENU_LOCATOR = lambda self, menu: (
         By.XPATH,
         f"//a[contains(@class, 'center-module-{menu}')]"
@@ -80,7 +85,7 @@ class SegmentPageLocators(MainPageLocators):
 
     ANDROID_SEGMENT_LOCATOR = (
         By.XPATH,
-        "//div[contains(@class, 'adding-segments')]/div[9]"
+        "//div[text()[contains(., 'Android')]]"
     )
 
     CHECKBOX_CONTAINER = (

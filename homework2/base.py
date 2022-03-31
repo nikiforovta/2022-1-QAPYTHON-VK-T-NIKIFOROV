@@ -1,3 +1,4 @@
+import json
 import os
 
 import allure
@@ -12,8 +13,8 @@ from ui.pages.segment_page import SegmentPage
 
 
 class BaseCase:
-    EMAIL = 'timofey.nikiforov@gmail.com'
-    PASSWORD = 'TaeixfnpL76YRkh'
+    EMAIL = None
+    PASSWORD = None
 
     driver = None
     logger = None
@@ -43,6 +44,11 @@ class BaseCase:
     def setup(self, driver, config, logger, request: FixtureRequest):
         self.driver = driver
         self.logger = logger
+
+        with open('credentials.json') as credentials:
+            credentials_dict = json.load(credentials)
+            self.EMAIL = credentials_dict['EMAIL']
+            self.PASSWORD = credentials_dict['PASSWORD']
 
         self.base_page: BasePage = (request.getfixturevalue('base_page'))
 

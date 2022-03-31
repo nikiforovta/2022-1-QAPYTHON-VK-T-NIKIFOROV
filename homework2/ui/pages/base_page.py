@@ -25,7 +25,7 @@ class BasePage(object):
         return element
 
     @allure.step('Send keys')
-    def send_keys(self, locator, keys, timeout=None, clear=False):
+    def send_keys(self, locator, keys, timeout=None, clear=True):
         element = self.click(locator, timeout=timeout) if clear else self.find(locator, timeout=timeout)
         if clear:
             element.clear()

@@ -14,7 +14,7 @@ class TestLogin(BaseCase):
                 ('login', 'password')
             ),
             pytest.param(
-                (BaseCase.EMAIL, 'password')
+                (None, 'password')
             ),
         ],
         ids=[
@@ -24,8 +24,10 @@ class TestLogin(BaseCase):
     )
     def test_negative_login(self, credentials):
         """Negative authorization test"""
+        if not credentials[0]:
+            credentials = (self.EMAIL, credentials[-1])
         self.login_page.login(credentials)
-        if credentials[0] == BaseCase.EMAIL:
+        if credentials[0] == self.EMAIL:
             assert self.login_page.find(self.login_page.locators.WRONG_DATA_LOCATOR).is_enabled()
         else:
             assert self.login_page.find(self.login_page.locators.ERROR_LOCATOR).is_enabled()
@@ -34,7 +36,7 @@ class TestLogin(BaseCase):
     @pytest.mark.skip("skip")
     def test_successful_login(self, login):
         """Positive authorization test"""
-        assert 'dashboard' in self.driver.current_url
+        assert self.main_page.find(self.main_page.locators.PROFILE_LOCATOR).is_displayed()
 
 
 @pytest.mark.usefixtures("login", "open_campaign")
@@ -56,6 +58,7 @@ class TestSegmentPage(BaseCase):
         """Segment creation test"""
         name = self.segment_page.add_segment()
         assert self.segment_page.find(self.segment_page.locators.SEGMENT_LOCATOR(name)).text == name
+        self.segment_page.remove_segment(name)
 
     @pytest.mark.UI
     def test_delete_segment(self):
