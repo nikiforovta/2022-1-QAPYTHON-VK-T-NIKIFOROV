@@ -1,2 +1,4 @@
-selenium~=4.1.2
-pytest~=7.0.1
+selenium==4.1.2
+pytest==7.0.1
+allure_python_commons==2.9.45
+Appium_Python_Client==2.1.2
