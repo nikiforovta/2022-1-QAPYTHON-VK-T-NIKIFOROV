@@ -2,7 +2,6 @@ from appium.webdriver.common.mobileby import MobileBy
 
 
 class BasePageLocators:
-    ALLOW_BUTTON = (MobileBy.ID, 'com.android.packageinstaller:id/permission_allow_button')
     TEXT_VIEW = lambda _, text: (MobileBy.XPATH, f'//android.widget.TextView[@text="{text}"]')
 
 

@@ -3,7 +3,6 @@ import os
 import allure
 import pytest
 from appium import webdriver
-from selenium.common.exceptions import TimeoutException
 
 from ui.capability import capability_select
 from ui.pages import BasePage, MainPage, SettingsPage, AboutPage, SourcePage
@@ -17,16 +16,6 @@ def base_page(driver, config):
 @pytest.fixture
 def main_page(driver, config):
     return MainPage(driver=driver, config=config)
-
-
-@allure.step("Разрешаем приложению доступ")
-@pytest.fixture(scope='function')
-def allow_all(base_page):
-    try:
-        while True:
-            base_page.click_for_android(base_page.locators.ALLOW_BUTTON)
-    except TimeoutException:
-        pass
 
 
 @pytest.fixture
@@ -51,8 +40,8 @@ def get_driver(appium_url):
 
 
 @pytest.fixture(scope='function')
-def app_version():
-    files = os.listdir('../apk')
+def app_version(repo_root):
+    files = os.listdir(os.path.join(repo_root, 'apk'))
     return files[0].split('v')[-1].rsplit('.', 1)[0]
 
 
