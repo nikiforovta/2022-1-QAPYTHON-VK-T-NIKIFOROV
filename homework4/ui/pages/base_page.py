@@ -167,8 +167,8 @@ class BasePage(object):
             logger.info(f'Swipe left on {locator}. Try {i + 1} of {self.ACTION_RETRY}...')
             try:
                 element = self.find(locator, 10)
-                right_x = element.rect['width'] * 0.7
-                left_x = element.rect['width'] * 0.3
+                right_x = element.rect['width'] * 0.55
+                left_x = element.rect['width'] * 0.45
                 upper_y = element.location['y']
                 lower_y = upper_y + element.rect['height']
                 y = (upper_y + lower_y) / 2

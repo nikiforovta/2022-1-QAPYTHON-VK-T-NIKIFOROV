@@ -16,21 +16,21 @@ class MainPage(BasePage):
     def send_request(self, query, first=True):
         if first:
             self.click_for_android(self.locators.KEYBOARD_INPUT)
+        self.click_for_android(self.locators.REQUEST_FIELD)
         self.find(self.locators.REQUEST_FIELD).send_keys(query)
         self.click_for_android(self.locators.SEND_REQUEST_BUTTON)
         self.driver.back()
 
     @allure.step("Отправляем поисковый запрос, который может пройти не с первого раза")
     def send_complicated_request(self, query):
-        first = True
-        while True:
+        for i in range(self.ACTION_RETRY):
             try:
-                self.send_request(query, first)
-                first = False
+                self.send_request(query, first=not bool(i))
                 if self.find(self.locators.REPLY).is_enabled():
                     return
             except TimeoutException:
-                pass
+                if i == self.ACTION_RETRY - 1:
+                    raise
 
     @allure.step("Выбор предлагаемого поискового запроса")
     def choose_suggestion(self, locator):

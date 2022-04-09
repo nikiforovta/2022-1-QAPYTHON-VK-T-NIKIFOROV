@@ -3,7 +3,6 @@ import pytest
 from marussia_tests.base import BaseCase
 
 
-@pytest.mark.usefixtures('allow_all')
 class TestMarussia(BaseCase):
 
     @pytest.mark.Android

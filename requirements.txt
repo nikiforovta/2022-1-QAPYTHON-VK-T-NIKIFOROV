@@ -1,5 +1,8 @@
 selenium==4.1.2
 pytest==7.0.1
+allure_python_commons==2.9.45
+Appium_Python_Client==2.1.2
+allure-pytest==2.9.45
 sqlalchemy==1.4.31
 pymysql==1.0.2
 pytest-xdist==2.5.0
