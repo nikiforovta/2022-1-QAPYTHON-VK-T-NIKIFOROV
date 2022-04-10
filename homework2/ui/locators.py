@@ -39,6 +39,11 @@ class MainPageLocators:
         f"//a[contains(@class, 'center-module-{menu}')]"
     )
 
+    CREATE_BUTTON_LOCATOR = (
+        By.XPATH,
+        '//div[contains(@class, "createButton")]'
+    )
+
 
 class CampaignPageLocators(MainPageLocators):
     CAMPAIGN_LOCATOR = lambda self, name: (

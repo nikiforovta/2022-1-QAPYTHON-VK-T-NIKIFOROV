@@ -41,11 +41,11 @@ class BaseCase:
                 allure.attach(f.read(), 'test.log', allure.attachment_type.TEXT)
 
     @pytest.fixture(scope='function', autouse=True)
-    def setup(self, driver, config, logger, request: FixtureRequest):
+    def setup(self, repo_root, driver, config, logger, request: FixtureRequest):
         self.driver = driver
         self.logger = logger
 
-        with open('credentials.json') as credentials:
+        with open(os.path.join(repo_root, 'credentials.json')) as credentials:
             credentials_dict = json.load(credentials)
             self.EMAIL = credentials_dict['EMAIL']
             self.PASSWORD = credentials_dict['PASSWORD']
