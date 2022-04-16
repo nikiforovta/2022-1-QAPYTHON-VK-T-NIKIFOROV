@@ -33,10 +33,8 @@ class TestLogin(BaseCase):
             assert self.login_page.find(self.login_page.locators.ERROR_LOCATOR).is_enabled()
 
     @pytest.mark.UI
-    @pytest.mark.skip("skip")
     def test_successful_login(self, login):
         """Positive authorization test"""
-        assert self.main_page.find(self.main_page.locators.PROFILE_LOCATOR).is_displayed()
         assert self.main_page.find(self.main_page.locators.CREATE_BUTTON_LOCATOR).is_displayed()
 
 
