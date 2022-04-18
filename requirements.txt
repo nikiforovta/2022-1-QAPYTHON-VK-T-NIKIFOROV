@@ -1,8 +1,8 @@
-allure-pytest==2.9.45
-allure_python_commons==2.9.45
 Faker==13.2.0
-pytest==7.0.1
 requests==2.27.1
-selenium==4.1.1
-webdriver_manager==3.5.3
 pytest-xdist==2.4.0
+selenium==4.1.2
+pytest==7.0.1
+allure_python_commons==2.9.45
+Appium_Python_Client==2.1.2
+allure-pytest==2.9.45
