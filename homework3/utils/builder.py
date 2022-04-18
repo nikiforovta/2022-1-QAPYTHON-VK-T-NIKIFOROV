@@ -24,15 +24,9 @@ class Builder:
         @dataclass
         class Campaign:
             name: str = ''
-            title: str = ''
-            description: str = ''
             id: int = 0
 
         if name is None:
             name = fake.lexify(text='???? ??? ??? ?')
-        if title is None:
-            title = fake.lexify(text='????? ???')
-        if description is None:
-            description = fake.lexify(text='??? ?????')
 
-        return Campaign(name=name, title=title, description=description)
+        return Campaign(name=name)
