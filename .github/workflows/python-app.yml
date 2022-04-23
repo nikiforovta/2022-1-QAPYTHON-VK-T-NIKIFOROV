@@ -8,6 +8,7 @@ on:
     branches: [ homework3, homework6, homework7]
   pull_request:
     branches: [ homework3, homework6, homework7]
+  workflow_dispatch:
 
 jobs:
 
