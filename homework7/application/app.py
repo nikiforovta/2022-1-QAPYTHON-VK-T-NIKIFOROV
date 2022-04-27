@@ -72,7 +72,7 @@ def update_surname(name):
     surname_host = os.environ['SURNAME_HOST']
     surname_port = os.environ['SURNAME_PORT']
     resp = requests.put(f'http://{surname_host}:{surname_port}/update_surname/{name}', json=request.get_json())
-    return jsonify(resp.content), resp.status_code
+    return jsonify(resp.content.decode()), resp.status_code
 
 
 @app.route('/delete_surname/<name>', methods=['DELETE'])
@@ -80,7 +80,7 @@ def delete_surname(name):
     surname_host = os.environ['SURNAME_HOST']
     surname_port = os.environ['SURNAME_PORT']
     resp = requests.delete(f'http://{surname_host}:{surname_port}/delete_surname/{name}', json=request.get_json())
-    return jsonify(resp.content), resp.status_code
+    return jsonify(resp.content.decode()), resp.status_code
 
 
 @app.route('/get_user/<name>', methods=['GET'])

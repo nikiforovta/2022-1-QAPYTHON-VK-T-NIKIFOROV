@@ -7,3 +7,4 @@ allure-pytest==2.9.45
 Faker==13.2.0
 Flask==2.0.3
 requests==2.27.1
+werkzeug==2.1.1
