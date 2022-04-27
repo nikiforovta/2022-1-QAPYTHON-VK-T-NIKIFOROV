@@ -4,8 +4,6 @@ import os
 import requests
 from flask import Flask, request, jsonify
 
-import settings
-
 app = Flask(__name__)
 
 app_data = {}
@@ -29,13 +27,13 @@ def set_log():
 
 
 @app.before_request
-def log_request_info():
+def log_request():
     app.logger.info(f'Request Headers:\n{request.headers}')
     app.logger.info(f'Request Body:\n{request.data.decode()}\n')
 
 
 @app.after_request
-def log_response_info(response):
+def log_response(response):
     app.logger.info(f'Status code: {response.status_code}')
     app.logger.info(f'Response Headers:\n{response.headers}')
     app.logger.info(f'Response Body:\n{response.response}')
@@ -79,7 +77,7 @@ def update_surname(name):
 def delete_surname(name):
     surname_host = os.environ['SURNAME_HOST']
     surname_port = os.environ['SURNAME_PORT']
-    resp = requests.delete(f'http://{surname_host}:{surname_port}/delete_surname/{name}', json=request.get_json())
+    resp = requests.delete(f'http://{surname_host}:{surname_port}/delete_surname/{name}')
     return jsonify(resp.content.decode()), resp.status_code
 
 
@@ -98,8 +96,8 @@ def get_user_id_by_name(name):
             print(f'Unable to get age from external system 1:\n{e}')
 
         # get surname from external system 2
-        surname_host = settings.MOCK_HOST  # os.environ['SURNAME_HOST']
-        surname_port = settings.MOCK_PORT  # os.environ['SURNAME_PORT']
+        surname_host = os.environ['SURNAME_HOST']
+        surname_port = os.environ['SURNAME_PORT']
 
         surname = None
         try:

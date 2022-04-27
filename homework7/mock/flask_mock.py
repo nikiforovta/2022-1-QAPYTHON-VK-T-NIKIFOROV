@@ -1,3 +1,5 @@
+import logging
+import os
 import threading
 
 from flask import Flask, jsonify, request
@@ -7,6 +9,37 @@ import settings
 app = Flask(__name__)
 
 SURNAME_DATA = {}
+
+
+@app.before_first_request
+def set_log():
+    for handler in app.logger.handlers:
+        app.logger.removeHandler(handler)
+
+    logdir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'logs')
+    if not os.path.exists(logdir):
+        os.mkdir(logdir)
+    log_file = os.path.join(logdir, 'mock_request.log')
+    handler = logging.FileHandler(log_file, mode='w+')
+    handler.setLevel(logging.INFO)
+    app.logger.addHandler(handler)
+
+    app.logger.setLevel(logging.INFO)
+
+
+@app.before_request
+def log_request():
+    app.logger.info(f'Request Headers:\n{request.headers}')
+    app.logger.info(f'Request Body:\n{request.data.decode()}\n')
+
+
+@app.after_request
+def log_response(response):
+    app.logger.info(f'Status code: {response.status_code}')
+    app.logger.info(f'Response Headers:\n{response.headers}')
+    app.logger.info(f'Response Body:\n{response.response}')
+    app.logger.info('______')
+    return response
 
 
 @app.route('/update_surname/<name>', methods=['PUT'])

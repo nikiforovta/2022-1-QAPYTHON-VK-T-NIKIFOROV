@@ -52,6 +52,12 @@ def test_update_surname(socket_client, test_user):
     surname = json.loads(get_data[-1])['surname']
     assert surname == test_user
 
+def test_update_without_surname(socket_client, test_user):
+    socket_client.post('/add_user', {"name": test_user})
+    put_data = socket_client.put(f'/update_surname/{test_user}')
+
+    assert put_data[0].split(" ")[1] == "400"
+
 
 def test_remove_existing_surname(socket_client, test_user):
     socket_client.post('/add_user', {"name": test_user})
