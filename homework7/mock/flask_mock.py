@@ -80,7 +80,7 @@ def shutdown_stub():
 @app.route('/shutdown', methods=['GET'])
 def shutdown():
     shutdown_stub()
-    return jsonify(f'Ok, exiting'), 200
+    return jsonify('Ok, exiting'), 200
 
 
 def run_mock():
