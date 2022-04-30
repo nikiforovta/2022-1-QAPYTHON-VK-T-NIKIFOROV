@@ -1,3 +1,5 @@
+import os
+
 import pytest
 
 from utils.builder import Builder
@@ -28,9 +30,9 @@ class BaseApi:
         yield segment_data
 
     @pytest.fixture(scope='function')
-    def campaign(self):
+    def campaign(self, repo_root):
         campaign_data = self.builder.campaign()
-        result = self.api_client.post_create_campaign(campaign_data)
+        result = self.api_client.post_create_campaign(campaign_data, os.path.join(repo_root, 'campaign.jpg'))
         campaign_id = result.json()['id']
         print(campaign_id)
         campaign_data.id = int(campaign_id)

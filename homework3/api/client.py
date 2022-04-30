@@ -24,8 +24,8 @@ class TargetApiClient:
         self.session.cookies.update({'csrftoken': self.csrftoken})
         self.request_headers = {'X-CSRFToken': self.csrftoken}
 
-    def _request(self, method, url, headers=None, data=None, expected_status=200, params=None):
-        response = self.session.request(method=method, url=url, headers=headers, data=data, params=params)
+    def _request(self, method, url, headers=None, data=None, expected_status=200, params=None, file=None):
+        response = self.session.request(method=method, url=url, headers=headers, data=data, params=params, files=file)
         if response.status_code != expected_status:
             raise ResponseStatusCodeException(f'Got {response.status_code} {response.reason} for URL "{url}"')
         return response
@@ -81,9 +81,20 @@ class TargetApiClient:
         response = self._request(method='GET', url=urljoin(self.base_url, path))
         return response.json()['items'][0]
 
-    def post_create_campaign(self, campaign):
+    def get_url_id(self, url='https://target.my.com/campaign/new'):
+        return self._request(method='GET', url=urljoin(self.base_url, paths.URLS_ID), params={'url': url}).json()['id']
+
+    def get_content_id(self, content):
+        path = paths.CONTENT_ID
+        files = [('file', ('campaign.jpg', open(content, 'rb'), 'image/jpeg'))]
+        resp = self._request(method='POST', url=urljoin(self.base_url, path), file=files, headers=self.request_headers)
+        return resp.json()['id']
+
+    def post_create_campaign(self, campaign, content):
         path = paths.CREATE_CAMPAIGN
-        data = payloads.CAMPAIGN(campaign.name)
+        url_id = self.get_url_id()
+        content_id = self.get_content_id(content)
+        data = payloads.CAMPAIGN(campaign.name, url_id, content_id)
         return self._request(method='POST', url=urljoin(self.base_url, path), data=json.dumps(data),
                              headers=self.request_headers)
 

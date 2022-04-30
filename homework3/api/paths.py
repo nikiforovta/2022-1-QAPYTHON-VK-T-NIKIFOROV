@@ -8,5 +8,9 @@ CREATE_SEGMENT = 'api/v2/remarketing/segments.json?fields=relations__object_type
 
 GET_CAMPAIGNS = 'api/v2/campaigns.json?fields=id,name&sorting=-id&limit=250'
 GET_CAMPAIGN = lambda campaign_id: f'api/v2/campaigns.json?fields=id,name&limit=1&_q={campaign_id}'
+
+URLS_ID = 'api/v1/urls'
+CONTENT_ID = 'api/v2/content/static.json'
 CREATE_CAMPAIGN = 'api/v2/campaigns.json'
+
 DELETE_CAMPAIGN = 'api/v2/campaigns/mass_action.json'

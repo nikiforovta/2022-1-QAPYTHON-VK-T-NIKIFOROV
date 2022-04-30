@@ -8,6 +8,8 @@ SEGMENT = lambda name: {'name': name, 'pass_condition': 1, 'relations': [{'objec
                                                                                      'type': 'positive',
                                                                                      'source_id': 14595}}]}
 
-CAMPAIGN = lambda name: {"name": name, "objective": "traffic", "targetings": {"pads": [102643]}, "package_id": 961,
-                         "banners": [
-                             {"urls": {"primary": {"id": 14570324}}, "content": {"image_240x400": {"id": 10270195}}}]}
+CAMPAIGN = lambda name, url_id, content_id: {"name": name, "objective": "traffic", "targetings": {"pads": [102643]},
+                                             "package_id": 961,
+                                             "banners": [
+                                                 {"urls": {"primary": {"id": url_id}},
+                                                  "content": {"image_240x400": {"id": content_id}}}]}
