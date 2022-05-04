@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 
-class RBMModel(Base):
+class TopMethodModel(Base):
     __tablename__ = 'method'
     __table_args__ = {'mysql_charset': 'utf8'}
 
@@ -12,12 +12,12 @@ class RBMModel(Base):
         return f"<Request: method={self.method}, count={self.count}>"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    method = Column(String(273), nullable=False)
+    method = Column(String(7), nullable=False)
     count = Column(Integer, nullable=False)
 
 
-class Top10Model(Base):
-    __tablename__ = '10'
+class TopFrequentModel(Base):
+    __tablename__ = 'frequency'
     __table_args__ = {'mysql_charset': 'utf8'}
 
     def __repr__(self):
@@ -28,7 +28,7 @@ class Top10Model(Base):
     count = Column(Integer, nullable=False)
 
 
-class Top54xxModel(Base):
+class Top4xxModel(Base):
     __tablename__ = '4xx'
     __table_args__ = {'mysql_charset': 'utf8'}
 
@@ -42,7 +42,7 @@ class Top54xxModel(Base):
     ip = Column(String(15), nullable=False)
 
 
-class Top55xxModel(Base):
+class Top5xxModel(Base):
     __tablename__ = '5xx'
     __table_args__ = {'mysql_charset': 'utf8'}
 
