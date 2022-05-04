@@ -32,8 +32,11 @@ class MysqlClient:
         self.execute_query(f'DROP database IF EXISTS {self.db_name}')
         self.execute_query(f'CREATE database {self.db_name}')
 
-    def create_table_log(self, top_type='method'):
+    def create_empty_table_log(self, top_type='method'):
         if not inspect(self.engine).has_table(top_type):
+            Base.metadata.tables[top_type].create(self.engine)
+        else:
+            Base.metadata.tables[top_type].drop(self.engine)
             Base.metadata.tables[top_type].create(self.engine)
 
     def execute_query(self, query, fetch=False):

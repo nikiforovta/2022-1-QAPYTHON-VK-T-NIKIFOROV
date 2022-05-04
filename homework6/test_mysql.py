@@ -35,19 +35,19 @@ class TestMySql(MyTest):
         ('4xx', 10),
         ('5xx', 5)])
     def test_logs(self, top_type, expected_count, parse_logs):
-        self.mysql.create_table_log(top_type)
+        self.mysql.create_empty_table_log(top_type)
         self.builder.create_logs(parse_logs, top_type, quantity=expected_count)
         count = self.get_top_logs(top_type=top_type)
         assert len(count) == expected_count
 
     @pytest.mark.parametrize('top_type', ['method', 'frequency', '4xx', '5xx'])
     def test_order(self, top_type, parse_logs):
-        self.mysql.create_table_log(top_type)
+        self.mysql.create_empty_table_log(top_type)
         self.builder.create_logs(parse_logs, top_type)
         top_logs = self.get_top_logs(top_type=top_type)
         if top_type != '4xx':
-            for i in range(2, len(top_logs)):
+            for i in range(1, len(top_logs)):
                 assert top_logs[i - 1].count >= top_logs[i].count
         else:
-            for i in range(2, len(top_logs)):
+            for i in range(1, len(top_logs)):
                 assert top_logs[i - 1].headers_byte_size >= top_logs[i].headers_byte_size
