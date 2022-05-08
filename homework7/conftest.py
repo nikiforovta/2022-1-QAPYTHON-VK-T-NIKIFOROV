@@ -86,8 +86,9 @@ def stop_process(proc):
     if sys.platform.startswith('win'):
         proc.send_signal(signal.CTRL_BREAK_EVENT)
     else:
-        proc.send_signal(signal.SIGKILL)
-    proc.wait()
+        proc.send_signal(signal.SIGINT)
+    exit_code = proc.wait()
+    assert exit_code == 0, f'app exited abnormally with exit code: {exit_code}'
 
 
 def app_unconfig(config):
