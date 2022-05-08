@@ -84,9 +84,9 @@ def pytest_configure(config):
 
 def stop_process(proc):
     if sys.platform.startswith('win'):
-        proc.send_signal(signal.CTRL_C_EVENT)
+        proc.send_signal(signal.CTRL_BREAK_EVENT)
     else:
-        proc.send_signal(signal.SIGINT)
+        proc.send_signal(signal.SIGKILL)
     proc.wait()
 
 
