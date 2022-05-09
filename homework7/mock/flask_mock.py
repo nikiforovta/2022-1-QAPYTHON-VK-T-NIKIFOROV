@@ -73,8 +73,9 @@ def get_user_surname(name):
 
 def shutdown_stub():
     terminate_func = request.environ.get('werkzeug.server.shutdown')
-    if terminate_func:
-        terminate_func()
+    if terminate_func is None:
+        raise RuntimeError('Werkzeug Server Shutdown error')
+    terminate_func()
 
 
 @app.route('/shutdown', methods=['GET'])
