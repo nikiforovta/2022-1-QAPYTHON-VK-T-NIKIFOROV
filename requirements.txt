@@ -7,7 +7,7 @@ Appium_Python_Client==2.1.2
 allure-pytest==2.9.45
 webdriver_manager==3.5.3
 pytest-xdist==2.5.0
-werkzeug==2.0.3
-Flask==2.0.3
+Flask==2.1.0
+werkzeug==2.1.1
 sqlalchemy==1.4.31
 pymysql==1.0.2
