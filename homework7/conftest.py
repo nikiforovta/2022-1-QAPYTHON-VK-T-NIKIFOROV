@@ -70,21 +70,22 @@ def stub_config():
 
 def mock_config():
     from mock import flask_mock
-    flask_mock.run_mock()
+    mock_thread = flask_mock.run_mock()
 
     wait_ready(settings.MOCK_HOST, settings.MOCK_PORT)
+    return mock_thread
 
 
 def pytest_configure(config):
     if not hasattr(config, 'workerinput'):
         config.app_proc, config.app_stderr, config.app_stdout = app_config()
         config.stub_proc, config.stub_stderr, config.stub_stdout = stub_config()
-        mock_config()
+        config.mock_thread = mock_config()
 
 
 def stop_process(proc):
     if sys.platform.startswith('win'):
-        proc.send_signal(signal.CTRL_C_EVENT)
+        proc.send_signal(signal.CTRL_BREAK_EVENT)
     else:
         proc.send_signal(signal.SIGINT)
     exit_code = proc.wait()
@@ -105,11 +106,13 @@ def stub_unconfig(config):
     config.stub_stdout.close()
 
 
-def mock_unconfig():
-    requests.get(f'http://{settings.MOCK_HOST}:{settings.MOCK_PORT}/shutdown')
+def mock_unconfig(config):
+    resp = requests.get(f'http://{settings.MOCK_HOST}:{settings.MOCK_PORT}/shutdown')
+    if resp.status_code == 500:
+        config.mock_thread.join()
 
 
 def pytest_unconfigure(config):
     app_unconfig(config)
     stub_unconfig(config)
-    mock_unconfig()
+    mock_unconfig(config)

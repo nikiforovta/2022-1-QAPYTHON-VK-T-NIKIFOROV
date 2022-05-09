@@ -85,7 +85,7 @@ def shutdown():
 
 
 def run_mock():
-    server = threading.Thread(target=app.run, kwargs={
+    server = threading.Thread(target=app.run, daemon=True, kwargs={
         'host': settings.MOCK_HOST,
         'port': settings.MOCK_PORT
     })
