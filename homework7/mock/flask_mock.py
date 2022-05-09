@@ -1,10 +1,7 @@
 import logging
 import os
-import threading
 
 from flask import Flask, jsonify, request
-
-import settings
 
 app = Flask(__name__)
 
@@ -71,24 +68,8 @@ def get_user_surname(name):
         return jsonify(f'Surname for user "{name}" not found'), 404
 
 
-def shutdown_stub():
-    terminate_func = request.environ.get('werkzeug.server.shutdown')
-    if terminate_func is None:
-        raise RuntimeError('Werkzeug Server Shutdown error')
-    terminate_func()
+if __name__ == '__main__':
+    host = os.environ.get('MOCK_HOST', '127.0.0.1')
+    port = os.environ.get('MOCK_PORT', '4444')
 
-
-@app.route('/shutdown', methods=['GET'])
-def shutdown():
-    shutdown_stub()
-    return jsonify('Ok, exiting'), 200
-
-
-def run_mock():
-    server = threading.Thread(target=app.run, daemon=True, kwargs={
-        'host': settings.MOCK_HOST,
-        'port': settings.MOCK_PORT
-    })
-
-    server.start()
-    return server
+    app.run(host, port)

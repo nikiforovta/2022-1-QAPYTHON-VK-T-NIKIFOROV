@@ -69,18 +69,25 @@ def stub_config():
 
 
 def mock_config():
-    from mock import flask_mock
-    mock_thread = flask_mock.run_mock()
+    mock_path = os.path.join(repo_root, 'mock', 'flask_mock.py')
 
+    env = copy(os.environ)
+    env.update({
+        'MOCK_HOST': settings.MOCK_HOST,
+        'MOCK_PORT': settings.MOCK_PORT,
+    })
+
+    mock_proc = subprocess.Popen([python_root, mock_path], env=env)
     wait_ready(settings.MOCK_HOST, settings.MOCK_PORT)
-    return mock_thread
+
+    return mock_proc
 
 
 def pytest_configure(config):
     if not hasattr(config, 'workerinput'):
         config.app_proc, config.app_stderr, config.app_stdout = app_config()
         config.stub_proc, config.stub_stderr, config.stub_stdout = stub_config()
-        config.mock_thread = mock_config()
+        config.mock_proc = mock_config()
 
 
 def stop_process(proc):
@@ -107,9 +114,7 @@ def stub_unconfig(config):
 
 
 def mock_unconfig(config):
-    resp = requests.get(f'http://{settings.MOCK_HOST}:{settings.MOCK_PORT}/shutdown')
-    if resp.status_code == 500:
-        config.mock_thread.join()
+    stop_process(config.mock_proc)
 
 
 def pytest_unconfigure(config):
