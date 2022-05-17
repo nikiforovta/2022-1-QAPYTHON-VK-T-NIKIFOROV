@@ -1,0 +1,93 @@
+services:
+  db:
+    volumes:
+      - "./db:/db"
+    container_name: SQLQA
+    environment:
+      - MYSQL_ROOT_USER=root
+      - MYSQL_ROOT_PASSWORD=pass
+    ports:
+      - 3306:3306
+    image: "mysql:8.0"
+  #    command:
+  #      - /db/setup.sh
+
+  vk_api:
+    container_name: vk_mock
+    ports:
+      - 8543:8543
+    #    image: "vk_mock:latest"
+    build: ./vk_mock/.
+
+  myapp:
+    volumes:
+      - "./CONFIG:/myapp_config"
+    container_name: myapp
+    ports:
+      - 8081:8081
+    links:
+      - db
+      - vk_api
+    image: "myapp"
+    entrypoint: /app/myapp --config=/myapp_config/myapp.conf
+    depends_on:
+      db:
+        condition: service_completed_successfully
+      vk_api:
+        condition: service_started
+    configs:
+      - myapp_config
+
+  selenoid:
+    container_name: selenoid
+    image: "aerokube/selenoid:latest-release"
+    links:
+      - myapp
+    ports:
+      - 4444:4444
+    networks:
+      - selenoid
+    volumes:
+      - ".:/etc/selenoid/"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    command: [ "-conf", "/etc/selenoid/browsers.json", "-session-attempt-timeout", "3m", "-service-startup-timeout", "3m" ]
+
+  selenoid-ui:
+    container_name: selenoid-ui
+    image: "aerokube/selenoid-ui"
+    links:
+      - selenoid
+    ports:
+      - 8080:8080
+    networks:
+      - selenoid
+    command: [ "--selenoid-uri", "http://selenoid:4444" ]
+  chrome_99.0:
+    image: "selenoid/chrome:99.0"
+    container_name: chrome_99.0
+    links:
+      - selenoid
+      - selenoid-ui
+    depends_on:
+      - selenoid
+      - selenoid-ui
+    networks:
+      - selenoid
+
+  ui-tests:
+    image: "python_test:latest"
+    container_name: ui-tests
+    volumes:
+      - "./tests/:/tests"
+    networks:
+      - selenoid
+    entrypoint: bash /tests/start_ui_tests.sh
+
+
+configs:
+  myapp_config:
+    file: ./CONFIG/myapp.conf
+networks:
+  selenoid:
+    external:
+      name: selenoid

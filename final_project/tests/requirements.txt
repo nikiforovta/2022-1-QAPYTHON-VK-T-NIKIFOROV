@@ -1,7 +1,6 @@
 allure_python_commons==2.9.45
 Faker==13.11.1
 pytest==7.0.1
-pytest-xdist==2.5.0
 requests==2.27.1
 selenium==4.1.5
 SQLAlchemy==1.4.31
