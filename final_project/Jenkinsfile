@@ -5,7 +5,7 @@ pipeline {
         steps {
     	catchError {
       	   script {
-        	      docker.build("python-ui-tests", "-f ./final_project/tests/Dockerfile .")
+        	      docker.build("python-tests", "-f ./final_project/tests/Dockerfile .")
       	     }
           }
        }
@@ -18,18 +18,29 @@ pipeline {
       	      }
            }
         }
-     }
+    }
      stage('Run tests') {
         steps {
            catchError {
               script {
-          	     docker.image('aerokube/selenoid:latest-release').withRun('-p 4444:4444 -v /run/docker.sock:/var/run/docker.sock -v C:/ProgramData/Jenkins/.jenkins/workspace/Final_project/final_project/selenoid_config:/etc/selenoid/',
+          	     docker.image('aerokube/selenoid:latest-release').withRun('-p 4444:4444 -v /run/docker.sock:/var/run/docker.sock -v ${pwd}/final_project/selenoid_config:/etc/selenoid/',
             	'-timeout 600s -limit 2') { c ->
-              	docker.image('python-ui-tests').inside("--link ${c.id}:selenoid") {
-                    	sh "pytest -n 2 ${CMD_PARAMS}"
+              	docker.image('python-tests').inside("--link ${c.id}:selenoid") {
+                    	sh "pytest -n 2 --reruns 1 ${UI_TESTS_PATH}"
                 	    }
                    }
         	     }
+      	    }
+         }
+     }
+     stage('Run API tests') {
+        steps {
+           catchError {
+              script {
+                docker.image('python-tests') {
+                      sh "pytest -n 2 --reruns 1 ${API_TESTS_PATH}"
+                      }
+        	    }
       	    }
          }
      }
