@@ -5,7 +5,7 @@ pipeline {
         steps {
     	catchError {
       	   script {
-        	      docker.build("python-ui-tests", "-f Dockerfile .")
+        	      docker.build("python-ui-tests", "-f ./final_project/tests/Dockerfile .")
       	     }
           }
        }
