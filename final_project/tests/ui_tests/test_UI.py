@@ -1,5 +1,4 @@
 import dataclasses
-import time
 
 import pytest
 
@@ -84,7 +83,7 @@ class TestMainPage(BaseCase):
         assert self.driver.current_url == result_url
 
     @pytest.mark.UI
-    @pytest.mark.parametrize("item,result_url", [pytest.param([1, 1], "http://localhost:8081/welcome/"),
+    @pytest.mark.parametrize("item,result_url", [pytest.param([1, 1], "http://myapp:8081/welcome/"),
                                                  pytest.param([2, 1], "https://www.python.org/"),
                                                  pytest.param([2, 2],
                                                               "https://en.wikipedia.org/wiki/History_of_Python"),

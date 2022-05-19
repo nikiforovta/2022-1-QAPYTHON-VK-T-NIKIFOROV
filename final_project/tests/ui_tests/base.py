@@ -81,7 +81,7 @@ class BaseCase:
         user_data = self.builder.user()
         self.register(dataclasses.asdict(user_data))
         vk_id = str(random.randint(1, 100))
-        requests.post(url=f'http://localhost:8543/vk_id/{user_data.username}', json={'id': vk_id})
+        requests.post(url=f'http://vk_api:8543/vk_id/{user_data.username}', json={'id': vk_id})
         self.driver.refresh()
         yield vk_id
         self.api_client.delete_user(user_data.username)

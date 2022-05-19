@@ -10,10 +10,10 @@ def repo_root():
 
 
 def pytest_addoption(parser):
-    parser.addoption('--url', default='http://localhost:8081')
+    parser.addoption('--url', default='http://myapp:8081')
     parser.addoption('--debug_log', action='store_true')
     parser.addoption('--selenoid', action='store_true')
-    parser.addoption('--alluredir', default='allure_report')
+    # parser.addoption('--alluredir', default='allure_report')
 
 
 @pytest.fixture(scope='session')

@@ -34,8 +34,11 @@ def driver(config):
             "browserName": "chrome",
             "browserVersion": "99.0",
             "selenoid:options": {
-                "enableVNC": True
-            }
+                "enableVNC": True,
+                "enableVideo": False
+            },
+            "additionalNetworks": ["final"]
+            # "applicationContainers": ["myapp", "vk_mock:vkid", "selenoid"]
         }
 
         driver = webdriver.Remote(
