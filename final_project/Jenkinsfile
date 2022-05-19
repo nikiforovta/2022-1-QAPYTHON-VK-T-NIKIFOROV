@@ -26,7 +26,7 @@ pipeline {
           	     docker.image('aerokube/selenoid:latest-release').withRun('-p 4444:4444 -v /run/docker.sock:/var/run/docker.sock -v C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\Final_project\\final_project\\selenoid_config:/etc/selenoid/',
             	'-timeout 600s -limit 2') { c ->
               	docker.image('python-tests').inside("--link ${c.id.tokenize(' ')[-1]}:selenoid") {
-                    	sh "pytest -n 2 ${UI_TESTS_PATH}"
+                    	sh "pytest -n 2 --selenoid ${UI_TESTS_PATH}"
                 	    }
                    }
         	     }
@@ -38,7 +38,7 @@ pipeline {
            catchError {
               script {
                 docker.image('python-tests').inside {
-                      sh "pytest -n 2 --reruns 1 ${API_TESTS_PATH}"
+                      sh "pytest -n 2 ${API_TESTS_PATH}"
                       }
         	    }
       	    }
