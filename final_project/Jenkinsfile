@@ -25,8 +25,8 @@ pipeline {
               script {
           	     docker.image('aerokube/selenoid:latest-release').withRun('-p 4444:4444 -v /run/docker.sock:/var/run/docker.sock -v /mnt/c/ProgramData/Jenkins/.jenkins/workspace/Final_project/final_project/selenoid_config:/etc/selenoid/',
             	'-timeout 600s -limit 2') { c ->
-              	docker.image('python-tests').inside("--link ${c.id}:selenoid") {
-                    	sh "pytest -n 2 --reruns 1 ${UI_TESTS_PATH}"
+              	docker.image('python-tests').inside("--link ${c.id.tokenize(' ')[-1]}:selenoid") {
+                    	sh "pytest -n 2 ${UI_TESTS_PATH}"
                 	    }
                    }
         	     }
