@@ -33,6 +33,9 @@ def driver(config):
         capabilities = {
             "browserName": "chrome",
             "browserVersion": "99.0",
+            "selenoid:options": {
+                "enableVNC": True
+            }
         }
 
         driver = webdriver.Remote(

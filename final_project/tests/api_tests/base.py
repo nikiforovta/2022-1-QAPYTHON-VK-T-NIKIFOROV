@@ -1,6 +1,6 @@
 import pytest
 
-from api.client import ResponseStatusCodeException
+from utils.api_client import ResponseStatusCodeException
 from utils.builder import Builder
 
 

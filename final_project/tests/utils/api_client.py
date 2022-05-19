@@ -2,7 +2,7 @@ from urllib.parse import urljoin
 
 import requests
 
-from api import paths
+from utils import api_paths
 
 
 class ResponseStatusCodeException(Exception):

@@ -12,7 +12,7 @@ from ui.pages.base_page import BasePage
 from ui.pages.login_page import LoginPage
 from ui.pages.main_page import MainPage
 from ui.pages.registration_page import RegistrationPage
-from api.client import TMApiClient
+from utils.api_client import TMApiClient
 from utils.builder import Builder
 
 

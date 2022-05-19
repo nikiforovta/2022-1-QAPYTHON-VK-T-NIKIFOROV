@@ -13,6 +13,7 @@ def pytest_addoption(parser):
     parser.addoption('--url', default='http://localhost:8081')
     parser.addoption('--debug_log', action='store_true')
     parser.addoption('--selenoid', action='store_true')
+    parser.addoption('--alluredir', default='allure_report')
 
 
 @pytest.fixture(scope='session')
@@ -38,7 +39,7 @@ def config(request):
     url = request.config.getoption('--url')
     debug_log = request.config.getoption('--debug_log')
     if request.config.getoption('--selenoid'):
-        selenoid = 'http://127.0.0.1:4444/wd/hub'
+        selenoid = 'http://selenoid:4444/wd/hub'
     else:
         selenoid = None
 
