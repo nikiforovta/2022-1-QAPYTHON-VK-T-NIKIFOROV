@@ -1,59 +1,56 @@
 pipeline {
-  agent any
-  stages {
-     stage("Build image") {
-        steps {
-    	catchError {
-      	   script {
-        	      docker.build("python-tests", "-f ./final_project/tests/Dockerfile .")
-      	     }
-          }
-       }
-    }
-     stage('Pull browser') {
-        steps {
-           catchError {
-              script {
-      	    docker.image('selenoid/chrome:99.0')
-      	      }
-           }
+    agent any
+    stages {
+        stage("Build image") {
+            steps {
+                script {
+                    docker.build("python-tests", "./final_project/tests")
+                }
+            }
+        }
+        stage('Pull browser') {
+            steps {
+                script {
+                    docker.image('selenoid/chrome:99.0')
+                }
+            }
+        }
+        stage('Run UI tests') {
+            steps {
+                script {
+                    docker.image("aerokube/selenoid:latest-release").run('--name selenoid_jenkins -p 4444:4444 -v /run/docker.sock:/var/run/docker.sock -v C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\Final_project\\final_project\\selenoid_config:/etc/selenoid/ --net=final',
+                    '-timeout 600s -limit 2 -container-network final')
+                    docker.image('python-tests').run("--name python_ui --net=final -v C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\Final_project\\final_project\\allure_report:/allure_report/", "sh pytest -n 2 --selenoid --alluredir /allure_report ${UI_TESTS_PATH}")
+                }
+            }
+        }
+        stage('Run API tests') {
+            steps {
+                script {
+                    docker.image('python-tests').run("--name python_api --net=final -v C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\Final_project\\final_project\\allure_report:/allure_report/", "sh pytest -n 2 --alluredir /allure_report ${API_TESTS_PATH}")
+                }
+            }
+        }
+        stage('Reports') {
+            steps {
+                allure([
+      	            includeProperties: false,
+      	            jdk: '',
+      	            properties: [],
+      	            reportBuildPolicy: 'ALWAYS',
+      	            results: [[path: 'C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\Final_project\\final_project\\allure_report']]
+                ])
+  	        }
+        }
+        stage('Cleanup') {
+            steps {
+                bat(script: "docker stop python_ui")
+                bat(script: "docker rm -f python_ui")
+                bat(script: "docker stop selenoid_jenkins")
+                bat(script: "docker rm -f selenoid_jenkins")
+                bat(script: "docker stop python_api")
+                bat(script: "docker rm -f python_api")
+            }
         }
     }
-     stage('Run UI tests') {
-        steps {
-           catchError {
-              script {
-          	     docker.image('aerokube/selenoid:latest-release').withRun('-p 4444:4444 -v /run/docker.sock:/var/run/docker.sock -v C:\\ProgramData\\Jenkins\\.jenkins\\workspace\\Final_project\\final_project\\selenoid_config:/etc/selenoid/',
-            	'-timeout 600s -limit 2 -container-network final') { c ->
-              	docker.image('python-tests').inside("--link ${c.id.tokenize(' ')[-1]}:selenoid") {
-                    	sh "pytest -n 2 --selenoid ${UI_TESTS_PATH}"
-                	    }
-                   }
-        	     }
-      	    }
-         }
-     }
-     stage('Run API tests') {
-        steps {
-           catchError {
-              script {
-                docker.image('python-tests').inside {
-                      sh "pytest -n 2 ${API_TESTS_PATH}"
-                      }
-        	    }
-      	    }
-         }
-     }
-     stage('Reports') {
-        steps {
-           allure([
-      	   includeProperties: false,
-      	   jdk: '',
-      	   properties: [],
-      	   reportBuildPolicy: 'ALWAYS',
-      	   results: [[path: 'allure_report']]
-    	   ])
-  	        }
-         }
-     }
 }
