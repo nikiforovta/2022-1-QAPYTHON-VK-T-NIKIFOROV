@@ -51,5 +51,8 @@ class SocketClient:
             pass
         return total_data.decode().splitlines()
 
+    def get_response_code(self, response):
+        return int(response[0].split(" ")[1])
+
     def close(self):
         self.client.close()
