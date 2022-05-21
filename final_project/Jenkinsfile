@@ -1,7 +1,7 @@
 pipeline {
     agent any
     stages {
-        stage("Build image") {
+        stage("Setup environment and run tests") {
             steps {
                 step([$class: 'DockerComposeBuilder', dockerComposeFile: './final_project/docker-compose.yml', option: [$class: 'StartAllServices'], useCustomDockerComposeFile: true])
             }
@@ -16,6 +16,11 @@ pipeline {
       	            results: [[path: './final_project/allure_report']]
                 ])
   	        }
+        }
+        stage("Teardown environment") {
+            steps {
+                step([$class: 'DockerComposeBuilder', dockerComposeFile: './final_project/docker-compose.yml', option: [$class: 'StopAllServices'], useCustomDockerComposeFile: true])
+            }
         }
     }
 }
