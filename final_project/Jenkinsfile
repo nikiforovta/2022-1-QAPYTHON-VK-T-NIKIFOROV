@@ -12,11 +12,7 @@ pipeline {
                     bat 'docker wait ui-tests'
                 }
                 allure([
-      	            includeProperties: false,
-      	            jdk: '',
-      	            properties: [],
-      	            reportBuildPolicy: 'ALWAYS',
-      	            results: [[path: './final_project/allure-report']]
+      	            results: [[path: './final_project/allure-results']]
                 ])
   	        }
         }
