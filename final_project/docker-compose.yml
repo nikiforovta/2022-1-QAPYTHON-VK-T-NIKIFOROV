@@ -69,7 +69,7 @@ services:
     container_name: ui-tests
     volumes:
       - "./tests/:/tests"
-      - "./allure-results:/tmp/allure"
+      - "../allure-results:/tmp/allure"
     entrypoint: bash /tests/start_tests.sh
     depends_on:
       selenoid:
