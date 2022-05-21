@@ -20,8 +20,7 @@ services:
     container_name: vk_mock
     ports:
       - 8543:8543
-    #    image: "vk_mock:latest"
-    build: ./vk_mock/.
+    image: "vk_mock:latest"
 
   myapp:
     networks:
@@ -31,9 +30,6 @@ services:
     container_name: myapp
     ports:
       - 8081:8081
-    links:
-      - db
-      - vk_api
     image: "myapp"
     entrypoint: /app/myapp --config=/myapp_config/myapp.conf
     depends_on:
@@ -47,9 +43,6 @@ services:
       final: null
     container_name: selenoid
     image: "aerokube/selenoid:latest-release"
-    links:
-      - myapp
-      - vk_api
     ports:
       - 4444:4444
     volumes:
@@ -65,8 +58,6 @@ services:
       final: null
     container_name: selenoid-ui
     image: "aerokube/selenoid-ui"
-    links:
-      - selenoid
     ports:
       - 8082:8080
     command: [ "--selenoid-uri", "http://selenoid:4444" ]
@@ -76,10 +67,6 @@ services:
       final: null
     image: "python_test:latest"
     container_name: ui-tests
-    links:
-      - selenoid
-      - myapp
-      - vk_api
     volumes:
       - "./tests/:/tests"
       - "./allure-report:/tmp/allure"
