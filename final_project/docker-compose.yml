@@ -74,6 +74,8 @@ services:
     depends_on:
       selenoid:
         condition: service_started
+      myapp:
+        condition: service_started
 
 networks:
   final:
