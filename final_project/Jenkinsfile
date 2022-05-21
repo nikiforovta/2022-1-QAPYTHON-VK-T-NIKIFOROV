@@ -8,19 +8,23 @@ pipeline {
         }
         stage('Reports') {
             steps {
+                script {
+                    bat 'docker wait ui-tests'
+                }
                 allure([
       	            includeProperties: false,
       	            jdk: '',
       	            properties: [],
       	            reportBuildPolicy: 'ALWAYS',
-      	            results: [[path: './final_project/allure_report']]
+      	            results: [[path: './final_project/allure-report']]
                 ])
   	        }
         }
-//         stage("Teardown environment") {
-//             steps {
-//                 step([$class: 'DockerComposeBuilder', dockerComposeFile: './final_project/docker-compose.yml', option: [$class: 'StopAllServices'], useCustomDockerComposeFile: true])
-//             }
-//         }
+        stage("Teardown environment") {
+            steps {
+                cleanWs()
+//              step([$class: 'DockerComposeBuilder', dockerComposeFile: './final_project/docker-compose.yml', option: [$class: 'StopAllServices'], useCustomDockerComposeFile: true])
+            }
+        }
     }
 }
