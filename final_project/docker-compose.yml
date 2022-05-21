@@ -38,11 +38,9 @@ services:
     entrypoint: /app/myapp --config=/myapp_config/myapp.conf
     depends_on:
       db:
-        condition: service_completed_successfully
+        condition: service_started
       vk_api:
         condition: service_started
-    configs:
-      - myapp_config
 
   selenoid:
     networks:
@@ -86,11 +84,10 @@ services:
     volumes:
       - "./tests/:/tests"
     entrypoint: bash /tests/start_tests.sh
+    depends_on:
+      selenoid:
+        condition: service_started
 
-
-configs:
-  myapp_config:
-    file: ./CONFIG/myapp.conf
 networks:
   final:
     external:
