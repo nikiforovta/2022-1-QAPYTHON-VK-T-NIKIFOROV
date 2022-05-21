@@ -20,7 +20,7 @@ services:
     container_name: vk_mock
     ports:
       - 8543:8543
-    image: "vk_mock:latest"
+    build: ./vk_mock/.
 
   myapp:
     networks:
