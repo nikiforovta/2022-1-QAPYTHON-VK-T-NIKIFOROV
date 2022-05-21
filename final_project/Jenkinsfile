@@ -17,10 +17,10 @@ pipeline {
                 ])
   	        }
         }
-        stage("Teardown environment") {
-            steps {
-                step([$class: 'DockerComposeBuilder', dockerComposeFile: './final_project/docker-compose.yml', option: [$class: 'StopAllServices'], useCustomDockerComposeFile: true])
-            }
-        }
+//         stage("Teardown environment") {
+//             steps {
+//                 step([$class: 'DockerComposeBuilder', dockerComposeFile: './final_project/docker-compose.yml', option: [$class: 'StopAllServices'], useCustomDockerComposeFile: true])
+//             }
+//         }
     }
 }
