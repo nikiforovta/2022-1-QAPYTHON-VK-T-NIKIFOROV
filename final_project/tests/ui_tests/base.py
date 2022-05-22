@@ -63,11 +63,13 @@ class BaseCase:
 
         self.registration_page: RegistrationPage = (request.getfixturevalue('registration_page'))
 
-    def register(self, form_data):
+    @allure.step("Registration of user with data {1}")
+    def register(self, form_data, checkbox=True):
         self.login_page.to_registration()
-        self.registration_page.registration(form_data)
+        self.registration_page.registration(form_data, checkbox)
         return self.main_page
 
+    @allure.step("Login of precreated test user")
     @pytest.fixture(scope='function')
     def login(self, credentials=None):
         if credentials is None:
@@ -76,6 +78,7 @@ class BaseCase:
             self.login_page.login(credentials=(credentials['username'], credentials['password']))
         yield self.main_page
 
+    @allure.step("Create temporary user with VK ID")
     @pytest.fixture(scope='function')
     def temp_user_vk(self):
         user_data = self.builder.user()
@@ -86,6 +89,7 @@ class BaseCase:
         yield vk_id
         self.api_client.delete_user(user_data.username)
 
+    @allure.step("Create temporary user without VK ID")
     @pytest.fixture(scope='function')
     def temp_user(self):
         user_data = self.builder.user()

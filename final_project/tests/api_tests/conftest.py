@@ -2,8 +2,9 @@ import json
 
 import pytest
 
-from utils.api.client import TMApiClient
 from api.fixtures import *
+from utils.api.client import TMApiClient
+from utils.db.client import MysqlClient
 
 
 def pytest_addoption(parser):
@@ -30,3 +31,10 @@ def credentials():
 def api_client(credentials) -> TMApiClient:
     api_client = TMApiClient(credentials)
     return api_client
+
+
+@pytest.fixture(scope='session')
+def mysql_client(request) -> MysqlClient:
+    client = request.config.mysql_client
+    yield client
+    client.connection.close()

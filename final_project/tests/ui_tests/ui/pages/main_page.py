@@ -1,3 +1,4 @@
+import allure
 from selenium.webdriver import ActionChains
 
 from ui import locators
@@ -16,6 +17,7 @@ class MainPage(BasePage):
     def get_vk_id(self):
         return self.find(self.locators.VK_ID_LOCATOR).text.split(" ")[-1]
 
+    @allure.step("Logout from main page")
     def logout(self):
         self.click(self.locators.LOGOUT_LOCATOR)
 
