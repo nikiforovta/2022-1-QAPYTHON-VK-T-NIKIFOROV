@@ -11,7 +11,7 @@ class MysqlClient:
         self.user = user
         self.port = '3306'
         self.password = password
-        self.host = 'localhost'
+        self.host = 'SQLQA'
         self.db_name = db_name
 
         self.connection = None

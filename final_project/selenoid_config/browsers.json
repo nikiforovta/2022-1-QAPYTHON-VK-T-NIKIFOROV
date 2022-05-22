@@ -13,8 +13,7 @@
     "versions": {
       "99.0": {
         "image": "selenoid/chrome:99.0",
-        "port": "4444",
-        "env" : ["VERBOSE=true"]
+        "port": "4444"
       }
     }
   }

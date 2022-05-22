@@ -1,7 +1,7 @@
 services:
   db:
     networks:
-      final: null
+      final_network: null
     container_name: SQLQA
     environment:
       - MYSQL_ROOT_PASSWORD=1111
@@ -14,11 +14,11 @@ services:
     healthcheck:
       test: [ "CMD", "mysqladmin" ,"-uroot", "-p1111", "ping", "-h", "SQLQA" ]
       timeout: 10s
-      retries: 50
+      retries: 30
 
   vk_api:
     networks:
-      final: null
+      final_network: null
     container_name: vk_mock
     ports:
       - 8543:8543
@@ -26,7 +26,7 @@ services:
 
   myapp:
     networks:
-      final: null
+      final_network: null
     volumes:
       - "./CONFIG:/myapp_config"
     container_name: myapp
@@ -42,7 +42,7 @@ services:
 
   selenoid:
     networks:
-      final: null
+      final_network: null
     container_name: selenoid
     image: "aerokube/selenoid:latest-release"
     ports:
@@ -51,13 +51,11 @@ services:
       - "./selenoid_config:/etc/selenoid/"
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "./selenoid_config/logs:/opt/selenoid/logs"
-    environment:
-      - OVERRIDE_VIDEO_OUTPUT_DIR=./selenoid_config/video
-    command: [ "-conf", "/etc/selenoid/browsers.json", "-log-output-dir", "/opt/selenoid/logs", "-container-network", "final" ]
+    command: [ "-conf", "/etc/selenoid/browsers.json", "-log-output-dir", "/opt/selenoid/logs", "-container-network", "final_network" ]
 
   selenoid-ui:
     networks:
-      final: null
+      final_network: null
     container_name: selenoid-ui
     image: "aerokube/selenoid-ui"
     ports:
@@ -66,9 +64,9 @@ services:
 
   tests:
     networks:
-      final: null
+      final_network: null
     container_name: tests
-    image: "python_test"
+    image: "python_test:latest"
     volumes:
       - "./tests/:/tests"
       - "../allure-results:/tmp/allure"
@@ -80,6 +78,6 @@ services:
         condition: service_started
 
 networks:
-  final:
+  final_network:
     external:
-      name: final
+      name: final_network

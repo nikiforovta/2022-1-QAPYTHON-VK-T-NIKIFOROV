@@ -36,9 +36,7 @@ def driver(config):
             "selenoid:options": {
                 "enableVNC": True,
                 "enableVideo": False
-            },
-            "additionalNetworks": ["final"]
-            # "applicationContainers": ["myapp", "vk_mock:vkid", "selenoid"]
+            }
         }
 
         driver = webdriver.Remote(
