@@ -1,8 +1,11 @@
-allure_python_commons==2.9.45
-Faker==13.11.1
-pytest==7.0.1
+Faker==13.2.0
 requests==2.27.1
-selenium==4.1.5
-SQLAlchemy==1.4.31
+selenium==4.1.2
+pytest==7.0.1
+allure_python_commons==2.9.45
+Appium_Python_Client==2.1.2
+allure-pytest==2.9.45
 webdriver_manager==3.5.3
+pytest-xdist==2.5.0
+sqlalchemy==1.4.31
 pymysql==1.0.2
