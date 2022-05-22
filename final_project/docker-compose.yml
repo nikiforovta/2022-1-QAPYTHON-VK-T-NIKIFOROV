@@ -68,11 +68,11 @@ services:
     networks:
       final: null
     container_name: tests
+    image: "python_test"
     volumes:
       - "./tests/:/tests"
       - "../allure-results:/tmp/allure"
     entrypoint: bash /tests/start_tests.sh
-    build: ./tests
     depends_on:
       selenoid:
         condition: service_started
