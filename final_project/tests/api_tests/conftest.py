@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from utils.api_client import TMApiClient
+from utils.api.client import TMApiClient
 from api.fixtures import *
 
 

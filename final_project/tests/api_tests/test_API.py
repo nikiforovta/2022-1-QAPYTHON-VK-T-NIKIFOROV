@@ -1,6 +1,6 @@
 import pytest
 
-from utils.api_client import ResponseStatusCodeException
+from utils.api.client import ResponseStatusCodeException
 from base import BaseApi
 
 

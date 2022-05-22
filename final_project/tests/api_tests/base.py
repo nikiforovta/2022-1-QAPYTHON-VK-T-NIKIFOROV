@@ -1,7 +1,7 @@
 import pytest
 
-from utils.api_client import ResponseStatusCodeException
-from utils.builder import Builder
+from utils.api.client import ResponseStatusCodeException
+from utils.user_builder import Builder
 
 
 class BaseApi:

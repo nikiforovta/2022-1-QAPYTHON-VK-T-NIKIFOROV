@@ -2,7 +2,7 @@ from urllib.parse import urljoin
 
 import requests
 
-from utils import api_paths
+from utils.api import paths
 
 
 class ResponseStatusCodeException(Exception):
@@ -24,12 +24,12 @@ class TMApiClient:
         return response
 
     def login(self, credentials):
-        path = api_paths.User.login
+        path = paths.User.login
         data = credentials
         self._request(method="POST", url=urljoin(self.base_url, path), data=data)
 
     def add_user(self, user_data):
-        path = api_paths.User.add_user
+        path = paths.User.add_user
         data = {"name": user_data.user_name,
                 "surname": user_data.user_surname,
                 "username": user_data.username,
@@ -46,27 +46,27 @@ class TMApiClient:
                 "middle_name": user_data.user_middle_name,
                 "password": user_data.password,
                 "email": user_data.email}
-        path = api_paths.User.add_user
+        path = paths.User.add_user
         return self._request(method='POST', url=urljoin(self.base_url, path), json_data=data,
                              expected_status=210)
 
     def delete_user(self, username):
-        path = api_paths.User.delete_user(username)
+        path = paths.User.delete_user(username)
         self._request(method='DELETE', url=urljoin(self.base_url, path), expected_status=204)
 
     def change_password(self, username, password):
-        path = api_paths.User.change_password(username)
+        path = paths.User.change_password(username)
         data = {'password': password}
         self._request(method='PUT', url=urljoin(self.base_url, path), json_data=data, expected_status=200)
 
     def block_user(self, username):
-        path = api_paths.User.block(username)
+        path = paths.User.block(username)
         self._request(method='POST', url=urljoin(self.base_url, path), expected_status=200)
 
     def accept_user(self, username):
-        path = api_paths.User.accept(username)
+        path = paths.User.accept(username)
         self._request(method='POST', url=urljoin(self.base_url, path), expected_status=200)
 
     def get_status(self):
-        path = api_paths.Application.status
+        path = paths.Application.status
         return self._request(method='GET', url=urljoin(self.base_url, path), expected_status=200)

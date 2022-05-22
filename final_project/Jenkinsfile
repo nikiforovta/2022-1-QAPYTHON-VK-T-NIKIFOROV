@@ -3,13 +3,14 @@ pipeline {
     stages {
         stage("Setup environment and run tests") {
             steps {
+                docker.image('selenoid/chrome:99.0')
                 step([$class: 'DockerComposeBuilder', dockerComposeFile: './final_project/docker-compose.yml', option: [$class: 'StartAllServices'], useCustomDockerComposeFile: true])
             }
         }
         stage('Reports') {
             steps {
                 script {
-                    bat 'docker wait ui-tests'
+                    bat 'docker wait tests'
                 }
                 allure([
       	            results: [[path: './final_project/allure-results']]
