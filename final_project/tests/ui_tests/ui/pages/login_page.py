@@ -1,5 +1,3 @@
-import time
-
 import allure
 
 from ui import locators
@@ -19,11 +17,3 @@ class LoginPage(BasePage):
     @allure.step("Go to registration page from login page")
     def to_registration(self):
         self.click(self.locators.REGISTRATION_LOCATOR)
-
-    def get_flash_text(self):
-        for _ in range(self.MAX_RETRIES):
-            flash_text = self.find(self.locators.ERROR_LOCATOR)
-            if flash_text.text != "":
-                return flash_text.text
-            time.sleep(1)
-        return flash_text.text

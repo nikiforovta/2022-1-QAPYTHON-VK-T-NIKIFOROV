@@ -11,12 +11,33 @@ class TestRegistration(BaseCase):
 
     @pytest.mark.UI
     def test_positive_registration(self, temp_user):
-        """Testing normal registration process with all user data provided"""
+        """
+        Testing normal registration process with all user data provided
+
+        Prerequisite:
+        - temporary user account
+
+        Steps:
+        1. Login
+
+        Expected result:
+        - correct username at the main page"""
         assert temp_user.username == self.main_page.get_username()
 
     @pytest.mark.UI
     def test_negative_registration_already_exists(self, temp_user):
-        """An attempt to create already existing user profile"""
+        """
+        An attempt to create already existing user profile
+
+        Prerequisite:
+        - temporary user account
+
+        Steps:
+        1. Logout
+        2. Register with temporary user data
+
+        Expected result:
+        - registration failed with error message"""
         self.main_page.logout()
         self.register(dataclasses.asdict(temp_user))
         assert self.login_page.get_flash_text() == "User already exist"
@@ -38,7 +59,17 @@ class TestRegistration(BaseCase):
                                  "Missing checkbox"
                              ])
     def test_negative_registration_missing_fields(self, no_username, no_firstname, no_email, no_password, no_checkbox):
-        """An attempt to create user profile missing some user data"""
+        """
+        An attempt to create user profile missing some user data
+
+        Prerequisite:
+        - temporary user data with missing field
+
+        Steps:
+        1. Login with the given credentials
+
+        Expected result:
+        - login failed with error message"""
         user = self.builder.user()
         if no_firstname:
             user.user_name = ""
@@ -53,7 +84,7 @@ class TestRegistration(BaseCase):
         elif no_email:
             user.email = ""
             self.register(dataclasses.asdict(user))
-            assert self.login_page.get_flash_text() == "Incorrect email length"
+            assert self.registration_page.get_flash_text() == "Incorrect email length"
             # assert self.registration_page.find_validation_message(
             #     self.registration_page.locators.FORM_INPUT_LOCATOR("email")) != ""
         elif no_password:
@@ -83,19 +114,58 @@ class TestLogin(BaseCase):
         ]
     )
     def test_negative_login(self, credentials):
-        """Negative authorization test"""
+        """
+        Negative authorization test
+
+        Prerequisite:
+        - incorrect user credentials
+
+        Steps:
+        1. Login with the given credentials
+
+        Expected result:
+        - login failed with error message"""
         if not credentials[0]:
             credentials = (self.form_data['username'], credentials[-1])
         self.login_page.login(credentials)
         if credentials[0] == self.form_data['username']:
-            assert self.login_page.find(
-                self.login_page.locators.REGISTRATION_LOCATOR).is_enabled()
+            assert self.login_page.get_flash_text() != ""
         else:
             assert self.login_page.get_flash_text() == "Invalid username or password"
 
     @pytest.mark.UI
+    def test_login_blocked(self, temp_user):
+        """
+        Blocked user cannot login
+
+        Prerequisite:
+        - temporary user account
+
+        Steps:
+        1. Block temporary user via API
+        2. Login with temporary user credentials
+
+        Expected result:
+        - Warning message about blocked user account"""
+        self.main_page.logout()
+        self.api_client.block_user(temp_user.username)
+        self.login_page.login(credentials=(temp_user.username, temp_user.password))
+        assert self.login_page.get_flash_text() != ""
+
+    @pytest.mark.UI
     def test_successful_login(self, login):
-        """Positive authorization test"""
+        """
+        Positive authorization test
+
+        Prerequisite:
+        - test user account
+
+        Steps:
+        1. Login test user
+
+        Expected result:
+        - main page displayed
+        """
         assert self.main_page.find(self.main_page.locators.LOGOUT_LOCATOR).is_displayed()
 
 
@@ -165,10 +235,14 @@ class TestMainPage(BaseCase):
 
     @pytest.mark.UI
     def test_random_fact(self, login):
-        """Doc: 'A random motivational fact about Python is displayed at the bottom of the page'
+        """
+        Doc: 'A random motivational fact about Python is displayed at the bottom of the page'
+
         Prerequisite: test user account
+
         Steps:
-        - login test user
+        1. Login test user
+
         Expected result: text found at the page's footer """
         assert self.main_page.find(self.main_page.locators.RANDOM_FACT_LOCATOR).is_enabled()
 

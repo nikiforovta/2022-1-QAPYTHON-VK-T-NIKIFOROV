@@ -1,3 +1,5 @@
+import time
+
 import allure
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
@@ -34,3 +36,12 @@ class BasePage(object):
     @allure.step('Check alert message')
     def find_validation_message(self, locator):
         return self.find(locator).get_attribute("validationMessage")
+
+    @allure.step('Check warning message')
+    def get_flash_text(self):
+        for _ in range(self.MAX_RETRIES):
+            flash_text = self.find(self.locators.ERROR_LOCATOR)
+            if flash_text.text != "":
+                return flash_text.text
+            time.sleep(1)
+        return flash_text.text
