@@ -6,6 +6,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 
 class BasePage(object):
+    MAX_RETRIES = 5
     locators = None
 
     def __init__(self, driver):

@@ -5,7 +5,6 @@ from ui.pages.base_page import BasePage
 
 
 class LoginPage(BasePage):
-    MAX_RETRIES = 5
     locators = locators.LoginPageLocators()
 
     @allure.step("Login")
