@@ -24,9 +24,8 @@ class TestRegistration(BaseCase):
     @pytest.mark.UI
     @pytest.mark.parametrize("no_username,no_email,no_firstname,no_password,no_checkbox",
                              [
-                                 (1, 0, 0, 0,0),
-                                 pytest.param((0, 1, 0, 0,0),
-                                              marks=pytest.mark.xfail(reason='MINOR BUG: Incorrect error message')),
+                                 (1, 0, 0, 0, 0),
+                                 (0, 1, 0, 0, 0),
                                  (0, 0, 1, 0, 0),
                                  (0, 0, 0, 1, 0),
                                  (0, 0, 0, 0, 1),
@@ -44,29 +43,28 @@ class TestRegistration(BaseCase):
         if no_firstname:
             user.user_name = ""
             self.register(dataclasses.asdict(user))
-            assert self.registration_page.find(
-                self.registration_page.locators.FORM_INPUT_LOCATOR("user_name")).get_attribute(
-                "validationMessage") != ""
+            assert self.registration_page.find_validation_message(
+                self.registration_page.locators.FORM_INPUT_LOCATOR("user_name")) != ""
         elif no_username:
             user.username = ""
             self.register(dataclasses.asdict(user))
-            assert self.registration_page.find(
-                self.registration_page.locators.FORM_INPUT_LOCATOR("username")).get_attribute("validationMessage") != ""
+            assert self.registration_page.find_validation_message(
+                self.registration_page.locators.FORM_INPUT_LOCATOR("username")) != ""
         elif no_email:
             user.email = ""
             self.register(dataclasses.asdict(user))
             assert self.login_page.get_flash_text() == "Incorrect email length"
-            # assert self.registration_page.find(
-            #     self.registration_page.locators.FORM_INPUT_LOCATOR("email")).get_attribute("validationMessage") != ""
+            # assert self.registration_page.find_validation_message(
+            #     self.registration_page.locators.FORM_INPUT_LOCATOR("email")) != ""
         elif no_password:
             user.password = ""
             self.register(dataclasses.asdict(user))
-            assert self.registration_page.find(
-                self.registration_page.locators.FORM_INPUT_LOCATOR("password")).get_attribute("validationMessage") != ""
+            assert self.registration_page.find_validation_message(
+                self.registration_page.locators.FORM_INPUT_LOCATOR("password")) != ""
         elif no_checkbox:
             self.register(dataclasses.asdict(user), False)
-            assert self.registration_page.find(
-                self.registration_page.locators.FORM_INPUT_LOCATOR("term")).get_attribute("validationMessage") != ""
+            assert self.registration_page.find_validation_message(
+                self.registration_page.locators.FORM_INPUT_LOCATOR("term")) != ""
 
 
 class TestLogin(BaseCase):

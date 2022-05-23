@@ -30,3 +30,7 @@ class BasePage(object):
         if clear:
             element.clear()
         element.send_keys(keys)
+
+    @allure.step('Check alert message')
+    def find_validation_message(self, locator):
+        return self.find(locator).get_attribute("validationMessage")
