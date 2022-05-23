@@ -22,17 +22,26 @@ class TestRegistration(BaseCase):
         assert self.login_page.get_flash_text() == "User already exist"
 
     @pytest.mark.UI
-    @pytest.mark.parametrize("no_username", [0, 1], ids=["", "Missing username"])
-    @pytest.mark.parametrize("no_email",
-                             [0, pytest.param(1, marks=pytest.mark.xfail(reason='BUG: This field is not optional'))],
-                             ids=["", "Missing email"])
-    @pytest.mark.parametrize("no_firstname", [0, 1], ids=["", "Missing first name"])
-    @pytest.mark.parametrize("no_password", [0, 1], ids=["", "Missing password"])
-    @pytest.mark.parametrize("no_checkbox", [0, 1], ids=["", "Missing SDET checkbox"])
+    @pytest.mark.parametrize("no_username,no_email,no_firstname,no_password,no_checkbox",
+                             [
+                                 (1, 0, 0, 0,0),
+                                 pytest.param((0, 1, 0, 0,0),
+                                              marks=pytest.mark.xfail(reason='MINOR BUG: Incorrect error message')),
+                                 (0, 0, 1, 0, 0),
+                                 (0, 0, 0, 1, 0),
+                                 (0, 0, 0, 0, 1),
+                             ],
+                             ids=[
+                                 "Missing username",
+                                 "Missing email",
+                                 "Missing first name",
+                                 "Missing password",
+                                 "Missing checkbox"
+                             ])
     def test_negative_registration_missing_fields(self, no_username, no_firstname, no_email, no_password, no_checkbox):
         """An attempt to create user profile missing some user data"""
         user = self.builder.user()
-        if no_firstname or not (no_username or no_email or no_firstname or no_password or no_checkbox):
+        if no_firstname:
             user.user_name = ""
             self.register(dataclasses.asdict(user))
             assert self.registration_page.find(
@@ -46,8 +55,9 @@ class TestRegistration(BaseCase):
         elif no_email:
             user.email = ""
             self.register(dataclasses.asdict(user))
-            assert self.registration_page.find(
-                self.registration_page.locators.FORM_INPUT_LOCATOR("email")).get_attribute("validationMessage") != ""
+            assert self.login_page.get_flash_text() == "Incorrect email length"
+            # assert self.registration_page.find(
+            #     self.registration_page.locators.FORM_INPUT_LOCATOR("email")).get_attribute("validationMessage") != ""
         elif no_password:
             user.password = ""
             self.register(dataclasses.asdict(user))
@@ -102,12 +112,18 @@ class TestMainPage(BaseCase):
                                                  (3, "https://ru.wikipedia.org/wiki/SMTP")],
                              ids=['What is an API?', 'Future of internet', 'Lets talk about SMTP?'])
     def test_center_content(self, item, result_url, login):
-        """Doc: 'All links must contain information about resources and work properly'
-        Prerequisite: test user account
-        Steps:
-        - login test user
-        Expected result: correct links found at the page's center
         """
+        Doc:
+        'All links must contain information about resources and work properly'
+
+        Prerequisite:
+        - test user account
+
+        Steps:
+        1. Login test user
+
+        Expected result:
+        - correct links found at the page's center"""
         self.main_page.click(self.main_page.locators.CENTER_CONTENT_LOCATOR(item))
         self.driver.switch_to.window(self.driver.window_handles[-1])
         assert self.driver.current_url == result_url
@@ -133,11 +149,18 @@ class TestMainPage(BaseCase):
                              ids=['HOME', 'Python', 'Python history', 'About Flask', 'Linux', 'Download Centos7',
                                   'Network', 'WIRESHARK - NEWS', 'WIRESHARK - DOWNLOAD', 'TCPDUMP - EXAMPLES'])
     def test_navigation_bar(self, item, result_url, login):
-        """Doc: 'All links must contain information about resources and work properly'
-        Prerequisite: test user account
+        """
+        Doc:
+        'All links must contain information about resources and work properly'
+
+        Prerequisite:
+        - test user account
+
         Steps:
-        - login test user
-        Expected result: correct links found at the navigation bar """
+        1. Login test user
+
+        Expected result:
+        - correct links found at the navigation bar"""
         self.main_page.click_dropdown(*item)
         self.driver.switch_to.window(self.driver.window_handles[-1])
         assert self.driver.current_url == result_url
@@ -153,55 +176,86 @@ class TestMainPage(BaseCase):
 
     @pytest.mark.UI
     def test_logout(self, login):
-        """Doc: 'the Logout button should successfully log out the user'
-        Prerequisite: test user account
+        """
+        Doc:
+        'Logout button should successfully log out the user'
+
+        Prerequisite:
+        - test user account
+
         Steps:
-        - login test user
-        Expected result: test user's full name found on the page"""
+        1. Login test user
+
+        Expected result:
+        - test user's full name found on the page"""
         self.main_page.logout()
         assert self.login_page.find(self.login_page.locators.REGISTRATION_LOCATOR).is_enabled()
 
     @pytest.mark.UI
     def test_username(self, login):
-        """Doc: 'information about the current user is correctly displayed in the upper right corner at any
-        resolution'
-        Prerequisite: test user account
+        """
+        Doc:
+        'Information about the current user is correctly displayed in the upper right corner at any resolution'
+
+        Prerequisite:
+        - test user account
+
         Steps:
-        - login test user
-        Expected result: test user's username found on the page """
+        1. Login test user
+
+        Expected result:
+        - test user's username found on the page"""
         assert self.form_data['username'] == self.main_page.get_username()
 
     @pytest.mark.UI
     def test_fullname(self, login):
-        """Doc: 'information about the current user is correctly displayed in the upper right corner at any
-        resolution'
-        Prerequisite: test user account
+        """
+        Doc:
+        'Information about the current user is correctly displayed in the upper right corner at any resolution'
+
+        Prerequisite:
+        - test user account
+
         Steps:
-        - login test user
-        Expected result: test user's full name found on the page """
+        1. Login test user
+
+        Expected result:
+        - test user's full name found on the page"""
         assert [self.form_data['name'], self.form_data['surname']] == self.main_page.get_fullname()
 
     @pytest.mark.UI
     def test_vk_id_ok(self, temp_user_vk):
-        """Doc: 'if the user received a VK ID, then this identifier is displayed in the same way in the upper right
-        corner'
-        Prerequisite: temporary user account with precreated VK ID
+        """
+        Doc:
+        'If the user received a VK ID, then this identifier is displayed in the same way in the upper right corner'
+
+        Prerequisite:
+        - temporary user account with precreated VK ID
+
         Steps:
-        - register temporary user
-        - add VK ID via vk_mock API
-        - login temporary user
-        Expected result: correct VK ID found on the page """
+        1. Register temporary user
+        2. Add VK ID via vk_mock API
+        3. Login temporary user
+
+        Expected result:
+        - correct VK ID found on the page"""
         vk_id = temp_user_vk
         assert self.main_page.get_vk_id() == vk_id
 
     @pytest.mark.UI
     @pytest.mark.xfail(raises=TimeoutException, reason='OK: checking missing VK ID')
     def test_vk_id_fail(self, temp_user):
-        """Doc: 'if the user received a VK ID, then this identifier is displayed in the same way in the upper right
-        corner'
-        Prerequisite: temporary user account without VK ID
+        """
+        Doc:
+        'If the user received a VK ID, then this identifier is displayed in the same way in the upper right corner'
+
+        Prerequisite:
+        - temporary user account without VK ID
+
         Steps:
-        - register temporary user
-        - login temporary user
-        Expected result: VK ID not found on the page """
+        1. Register temporary user
+        2. Login temporary user
+
+        Expected result:
+        - VK ID not found on the page """
         self.main_page.get_vk_id()

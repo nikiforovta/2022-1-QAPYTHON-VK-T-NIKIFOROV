@@ -29,7 +29,7 @@ class Builder:
         if middle_name is None:
             middle_name = fake.middle_name() if random.random() >= 0.5 else ""
         if username is None:
-            while len(user['username']) < 6:
+            while len(user['username']) < 6 or len(user['username']) > 16:
                 user['username'] = fake.simple_profile()['username']
             username = user['username']
         if password is None:

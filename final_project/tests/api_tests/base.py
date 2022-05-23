@@ -28,7 +28,7 @@ class BaseApi:
             if str(e).split(" ")[1] != '404':
                 raise e
 
-    def get_users(self, **filters):
+    def get_user(self, **filters):
         self.db_client.session.commit()
         res = self.db_client.session.query(UsersModel).filter_by(**filters)
-        return res.all()
+        return res.first()
