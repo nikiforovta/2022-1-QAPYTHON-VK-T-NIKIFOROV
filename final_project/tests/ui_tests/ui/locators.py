@@ -29,6 +29,11 @@ class RegistrationPageLocators:
         "//a[@href='/login']"
     )
 
+    ERROR_LOCATOR = (
+        By.XPATH,
+        '//div[@id="flash"]'
+    )
+
 
 class MainPageLocators:
     LOGOUT_LOCATOR = (
